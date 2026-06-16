@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="zh">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Hirey Tasks — 收件箱归零</title>
+<meta name="description" content="把 Hi 收件箱里的消息/会议/匹配自动整理成可一键分诊的任务清单。" />
+<link rel="icon" href="icon.svg" type="image/svg+xml" />
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">
+    <img src="icon.svg" alt="" width="26" height="26" />
+    <span>Hirey&nbsp;Tasks</span>
+    <em>收件箱归零</em>
+  </div>
+  <div class="top-actions">
+    <button id="rulesBtn" class="ghost" title="自动分诊规则">规则</button>
+    <button id="settingsBtn" class="ghost" title="自动捕获与摘要">设置</button>
+    <span id="identity" class="identity" hidden></span>
+    <button id="authBtn" class="primary" hidden>登录</button>
+  </div>
+</header>
+
+<main id="app">
+  <section class="summary" id="summary" hidden>
+    <div class="stat"><b id="statOpen">0</b><span>待处理</span></div>
+    <div class="stat"><b id="statInbox">0</b><span>新进</span></div>
+    <div class="stat"><b id="statUrgent">0</b><span>紧急/高</span></div>
+    <div class="stat"><b id="statDone">0</b><span>已完成</span></div>
+    <div class="grow"></div>
+    <label class="filter"><input type="checkbox" id="showResolved" /> 显示已结</label>
+    <button id="refreshBtn" class="ghost small">刷新</button>
+  </section>
+
+  <div id="banner" class="banner" hidden></div>
+  <div id="list" class="list"></div>
+  <div id="empty" class="empty" hidden></div>
+</main>
+
+<!-- Settings drawer: enroll + digest -->
+<div id="settingsDrawer" class="drawer" hidden>
+  <div class="drawer-card">
+    <div class="drawer-head"><h3>自动捕获与摘要</h3><button class="x" data-close>×</button></div>
+    <p class="muted">开启后，落到你 Hi 收件箱的消息会被自动蒸馏成任务（去重、LLM 判类型/优先级/标题）。它是平行外挂——不影响消息本身的投递。</p>
+    <label class="row"><input type="checkbox" id="enrollEnabled" /> <span>开启自动捕获</span></label>
+    <label class="row">摘要渠道
+      <select id="digestChannel">
+        <option value="auto">自动（有手机走短信，否则邮件）</option>
+        <option value="sms">短信</option>
+        <option value="email">邮件</option>
+        <option value="none">不推送</option>
+      </select>
+    </label>
+    <div class="drawer-foot"><button id="saveEnroll" class="primary">保存</button></div>
+  </div>
+</div>
+
+<!-- Rules drawer -->
+<div id="rulesDrawer" class="drawer" hidden>
+  <div class="drawer-card">
+    <div class="drawer-head"><h3>自动分诊规则</h3><button class="x" data-close>×</button></div>
+    <p class="muted">命中条件（多项 AND）→ 自动打标 / 定优先级 / 自动丢弃 / 自动派发。捕获时按顺序应用。</p>
+    <div id="rulesList" class="rules-list"></div>
+    <details class="add-rule"><summary>+ 新建规则</summary>
+      <div class="rule-form">
+        <input id="rName" placeholder="规则名（可选）" />
+        <div class="rule-grid">
+          <label>来源含文本 <input id="rText" placeholder="如 报价单" /></label>
+          <label>类型=
+            <select id="rType"><option value="">任意</option><option>question</option><option>request</option><option>decision</option><option>meeting</option><option>lead</option><option>bug</option><option>fyi</option><option>general</option></select>
+          </label>
+          <label>设优先级
+            <select id="rPriority"><option value="">不变</option><option>urgent</option><option>high</option><option>normal</option><option>low</option></select>
+          </label>
+          <label>加标签 <input id="rLabel" placeholder="如 billing" /></label>
+          <label class="ck"><input type="checkbox" id="rDrop" /> 自动丢弃</label>
+        </div>
+        <button id="addRule" class="primary small">添加规则</button>
+      </div>
+    </details>
+  </div>
+</div>
+
+<!-- Login modal (hosted only) -->
+<div id="loginModal" class="modal" hidden>
+  <div class="modal-card">
+    <div class="drawer-head"><h3>登录 Hirey</h3><button class="x" data-close>×</button></div>
+    <p class="muted">任务是你私有的，登录后才能查看与管理。Hi 在验证身份后才创建账号——没有匿名身份、不用粘贴 key。</p>
+    <button id="googleLogin" class="primary block">用 Google 登录</button>
+    <div class="sep">或</div>
+    <div class="otp">
+      <div class="otp-tabs"><button class="tab active" data-otp="email">邮箱</button><button class="tab" data-otp="phone">手机</button></div>
+      <input id="otpId" placeholder="you@example.com" />
+      <button id="otpStart" class="ghost block">发送验证码</button>
+      <div id="otpStep2" hidden>
+        <input id="otpCode" placeholder="6 位验证码" inputmode="numeric" />
+        <button id="otpVerify" class="primary block">验证并登录</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="toast" class="toast" hidden></div>
+<script src="app.js"></script>
+</body>
+</html>

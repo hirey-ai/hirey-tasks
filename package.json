@@ -1,0 +1,12 @@
+{
+  "name": "hirey-tasks",
+  "version": "1.0.0",
+  "description": "Inbox-zero task manager for Hirey Hi — auto-captures your inbound messages/meetings/matches into an LLM-distilled, one-click-triageable task list. Zero dependencies.",
+  "type": "module",
+  "bin": { "hirey-tasks": "server.mjs" },
+  "scripts": { "start": "node server.mjs" },
+  "engines": { "node": ">=18" },
+  "license": "MIT",
+  "author": "Hirey",
+  "repository": { "type": "git", "url": "https://github.com/hirey-ai/hirey-tasks" }
+}

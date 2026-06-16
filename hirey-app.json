@@ -1,0 +1,11 @@
+{
+  "name": "Hirey Tasks",
+  "description": "Inbox-zero for Hirey Hi. Drowning in inbound? Hirey Tasks turns the messages, meeting requests and matches that land in your Hi inbox into one managed, prioritized task list — auto-captured and LLM-distilled into a recipient-facing title with a type (question / request / meeting / lead / bug / fyi) and priority, then triageable with one click (done / drop / snooze / delegate). Set rules to auto-label, auto-prioritize or auto-route, and get a batched digest instead of 40 interruptions. It's a parallel overlay: turning a message into a task never touches your conversations. Self-hosts in one command against the live Hi REST API; sign in with Google / email / phone — no key to paste.",
+  "tags": ["web", "tasks", "inbox", "inbox-zero", "productivity", "triage", "gtd", "frontend"],
+  "capabilities": ["hi.tasks"],
+  "command": "npm install && npm start",
+  "homepage": "https://github.com/hirey-ai/hirey-tasks",
+  "icon": "public/icon.svg",
+  "license": "MIT",
+  "author": "Hirey"
+}
