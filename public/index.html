@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Hirey Tasks — 收件箱归零</title>
-<meta name="description" content="把 Hi 收件箱里的消息/会议/匹配自动整理成可一键分诊的任务清单。" />
+<title>Hirey Tasks — 收件箱归零 / 看板</title>
+<meta name="description" content="把 Hi 收件箱里的消息/会议/匹配自动整理成任务，看板协作：派给别人、实时跟进度。" />
 <link rel="icon" href="icon.svg" type="image/svg+xml" />
 <link rel="stylesheet" href="styles.css" />
 </head>
@@ -13,44 +13,98 @@
   <div class="brand">
     <img src="icon.svg" alt="" width="26" height="26" />
     <span>Hirey&nbsp;Tasks</span>
-    <em>收件箱归零</em>
+    <em>收件箱 · 看板</em>
   </div>
   <div class="top-actions">
+    <div class="seg" id="viewSeg">
+      <button data-view="mine" class="active">我的</button>
+      <button data-view="assigned">派给我的</button>
+      <button data-view="all">全部</button>
+    </div>
+    <div class="seg" id="layoutSeg">
+      <button data-layout="board" class="active">看板</button>
+      <button data-layout="list">列表</button>
+    </div>
     <button id="rulesBtn" class="ghost" title="自动分诊规则">规则</button>
     <button id="settingsBtn" class="ghost" title="自动捕获与摘要">设置</button>
+    <button id="newBtn" class="primary">+ 新建</button>
     <span id="identity" class="identity" hidden></span>
     <button id="authBtn" class="primary" hidden>登录</button>
   </div>
 </header>
 
 <main id="app">
-  <section class="summary" id="summary" hidden>
-    <div class="stat"><b id="statOpen">0</b><span>待处理</span></div>
-    <div class="stat"><b id="statInbox">0</b><span>新进</span></div>
-    <div class="stat"><b id="statUrgent">0</b><span>紧急/高</span></div>
-    <div class="stat"><b id="statDone">0</b><span>已完成</span></div>
-    <div class="grow"></div>
-    <label class="filter"><input type="checkbox" id="showResolved" /> 显示已结</label>
-    <button id="refreshBtn" class="ghost small">刷新</button>
-  </section>
-
   <div id="banner" class="banner" hidden></div>
-  <div id="list" class="list"></div>
+  <section id="board" class="board"></section>
+  <div id="list" class="list" hidden></div>
   <div id="empty" class="empty" hidden></div>
 </main>
+
+<!-- Task detail drawer: progress timeline + add progress + assign + triage -->
+<div id="taskDrawer" class="drawer" hidden>
+  <div class="drawer-card wide">
+    <div class="drawer-head"><h3 id="tdTitle">任务</h3><button class="x" data-close>×</button></div>
+    <div id="tdMeta" class="td-meta"></div>
+    <div id="tdProgressBar" class="td-progress" hidden><div class="bar"><span id="tdBarFill"></span></div><small id="tdBarLabel"></small></div>
+
+    <div class="td-section">
+      <h4>进展 / 活动流</h4>
+      <div id="tdTimeline" class="timeline"></div>
+      <div class="add-progress-row">
+        <input id="tdNote" placeholder="写条进展…（评论 / 进度备注）" />
+        <input id="tdPct" type="number" min="0" max="100" placeholder="%" class="pct" />
+        <select id="tdStatus">
+          <option value="">不改状态</option>
+          <option value="in_progress">进行中</option>
+          <option value="waiting">等待</option>
+          <option value="todo">待办</option>
+          <option value="done">完成</option>
+        </select>
+        <button id="tdAddProgress" class="primary small">更新</button>
+      </div>
+    </div>
+
+    <div class="td-section" id="tdAssignSection">
+      <h4>派给别人</h4>
+      <p class="muted">把这个任务派给另一个用户 —— 填对方的 agent_id 或 owner public_id。需与对方有协作关系（同公司或已有 pairing）。</p>
+      <div class="assign-row">
+        <input id="tdAssignee" placeholder="对方 agent_id（ag_…）或 owner public_id" />
+        <input id="tdAssignNote" placeholder="派发说明（可选）" />
+        <button id="tdAssign" class="ghost small">派发</button>
+      </div>
+    </div>
+
+    <div class="td-foot">
+      <button id="tdComplete" class="done">✓ 完成</button>
+      <button id="tdSnooze" class="">稍后一天</button>
+      <button id="tdDrop" class="drop">✕ 丢弃</button>
+    </div>
+  </div>
+</div>
+
+<!-- New task modal -->
+<div id="newModal" class="modal" hidden>
+  <div class="modal-card">
+    <div class="drawer-head"><h3>新建任务</h3><button class="x" data-close>×</button></div>
+    <input id="nTitle" placeholder="任务标题" />
+    <div class="rule-grid">
+      <label>类型 <select id="nType"><option value="general">general</option><option>request</option><option>question</option><option>decision</option><option>meeting</option><option>bug</option><option>lead</option><option>fyi</option></select></label>
+      <label>优先级 <select id="nPriority"><option value="normal">normal</option><option>urgent</option><option>high</option><option>low</option></select></label>
+    </div>
+    <button id="nCreate" class="primary block">创建</button>
+  </div>
+</div>
 
 <!-- Settings drawer: enroll + digest -->
 <div id="settingsDrawer" class="drawer" hidden>
   <div class="drawer-card">
     <div class="drawer-head"><h3>自动捕获与摘要</h3><button class="x" data-close>×</button></div>
-    <p class="muted">开启后，落到你 Hi 收件箱的消息会被自动蒸馏成任务（去重、LLM 判类型/优先级/标题）。它是平行外挂——不影响消息本身的投递。</p>
+    <p class="muted">开启后，落到你 Hi 收件箱的消息会被自动蒸馏成任务（去重、LLM 判类型/优先级/标题）。平行外挂——不影响消息投递。</p>
     <label class="row"><input type="checkbox" id="enrollEnabled" /> <span>开启自动捕获</span></label>
     <label class="row">摘要渠道
       <select id="digestChannel">
         <option value="auto">自动（有手机走短信，否则邮件）</option>
-        <option value="sms">短信</option>
-        <option value="email">邮件</option>
-        <option value="none">不推送</option>
+        <option value="sms">短信</option><option value="email">邮件</option><option value="none">不推送</option>
       </select>
     </label>
     <div class="drawer-foot"><button id="saveEnroll" class="primary">保存</button></div>
@@ -68,12 +122,8 @@
         <input id="rName" placeholder="规则名（可选）" />
         <div class="rule-grid">
           <label>来源含文本 <input id="rText" placeholder="如 报价单" /></label>
-          <label>类型=
-            <select id="rType"><option value="">任意</option><option>question</option><option>request</option><option>decision</option><option>meeting</option><option>lead</option><option>bug</option><option>fyi</option><option>general</option></select>
-          </label>
-          <label>设优先级
-            <select id="rPriority"><option value="">不变</option><option>urgent</option><option>high</option><option>normal</option><option>low</option></select>
-          </label>
+          <label>类型= <select id="rType"><option value="">任意</option><option>question</option><option>request</option><option>decision</option><option>meeting</option><option>lead</option><option>bug</option><option>fyi</option><option>general</option></select></label>
+          <label>设优先级 <select id="rPriority"><option value="">不变</option><option>urgent</option><option>high</option><option>normal</option><option>low</option></select></label>
           <label>加标签 <input id="rLabel" placeholder="如 billing" /></label>
           <label class="ck"><input type="checkbox" id="rDrop" /> 自动丢弃</label>
         </div>
@@ -94,10 +144,7 @@
       <div class="otp-tabs"><button class="tab active" data-otp="email">邮箱</button><button class="tab" data-otp="phone">手机</button></div>
       <input id="otpId" placeholder="you@example.com" />
       <button id="otpStart" class="ghost block">发送验证码</button>
-      <div id="otpStep2" hidden>
-        <input id="otpCode" placeholder="6 位验证码" inputmode="numeric" />
-        <button id="otpVerify" class="primary block">验证并登录</button>
-      </div>
+      <div id="otpStep2" hidden><input id="otpCode" placeholder="6 位验证码" inputmode="numeric" /><button id="otpVerify" class="primary block">验证并登录</button></div>
     </div>
   </div>
 </div>

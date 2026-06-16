@@ -40,6 +40,7 @@ const CREDS_PATH = join(CREDS_DIR, 'credentials.json');
 // Tasks are private, so in hosted mode ALL of them require a signed-in session (no shared reader).
 const ALLOWED = new Set([
   'list', 'get', 'create', 'update', 'complete', 'drop', 'snooze', 'assign', 'delete',
+  'add_progress', 'list_progress',
   'enroll', 'get_enrollment', 'add_rule', 'list_rules', 'delete_rule',
 ].map((a) => `hi.tasks:${a}`));
 const isAllowed = (cap, action) => ALLOWED.has(`${cap}:${action}`);

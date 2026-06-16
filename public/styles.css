@@ -92,3 +92,50 @@ input,select{font:inherit;padding:8px 10px;border:1px solid var(--line);border-r
   .rule-grid{grid-template-columns:1fr}
   .brand em{display:none}
 }
+
+/* ---- v2: segments, kanban board, task detail drawer ---- */
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:9px;overflow:hidden;background:#fff}
+.seg button{background:#fff;border:0;border-radius:0;padding:6px 12px;font-size:13px;color:var(--muted)}
+.seg button.active{background:var(--brand);color:#fff}
+.top-actions{flex-wrap:wrap;gap:8px}
+
+.board{display:flex;gap:12px;overflow-x:auto;padding-bottom:8px;align-items:flex-start}
+.col{flex:0 0 250px;background:#eef1f5;border-radius:14px;padding:8px;min-height:120px}
+.col.drag-over{outline:2px dashed var(--brand);outline-offset:-2px}
+.col-head{display:flex;align-items:center;justify-content:space-between;font-size:12px;font-weight:700;letter-spacing:.03em;color:var(--muted);text-transform:uppercase;padding:4px 6px 8px}
+.col-head .n{background:#fff;border-radius:999px;padding:1px 8px;color:#374151}
+.col-cards{display:flex;flex-direction:column;gap:8px;min-height:24px}
+.kcard{background:#fff;border:1px solid var(--line);border-radius:11px;box-shadow:var(--shadow);padding:10px;cursor:pointer;border-left:4px solid var(--normal)}
+.kcard.p-urgent{border-left-color:var(--urgent)} .kcard.p-high{border-left-color:var(--high)} .kcard.p-low{border-left-color:var(--low)}
+.kcard.dragging{opacity:.45}
+.kcard .kt{font-weight:600;font-size:14px;margin:0 0 6px;word-break:break-word}
+.kcard .kmeta{display:flex;flex-wrap:wrap;gap:5px;align-items:center}
+.kbar{height:5px;background:#eef1f6;border-radius:4px;margin-top:8px;overflow:hidden}
+.kbar > i{display:block;height:100%;background:var(--brand)}
+.chip.assignee{background:#ecfdf3;color:#067647}
+.chip.reporter{background:#fff4e6;color:#b54708}
+
+.drawer-card.wide{width:min(560px,100%)}
+.td-meta{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:2px 0 10px}
+.td-progress{margin:0 0 14px}
+.td-progress .bar{height:8px;background:#eef1f6;border-radius:6px;overflow:hidden}
+.td-progress .bar > span{display:block;height:100%;background:var(--brand)}
+.td-progress small{color:var(--muted);font-size:12px}
+.td-section{border-top:1px solid var(--line);padding-top:12px;margin-top:12px}
+.td-section h4{margin:0 0 8px;font-size:14px}
+.timeline{display:flex;flex-direction:column;gap:8px;margin-bottom:10px;max-height:280px;overflow:auto}
+.tl{display:flex;gap:8px;font-size:13px}
+.tl .dot{flex:0 0 8px;width:8px;height:8px;border-radius:50%;background:var(--brand);margin-top:5px}
+.tl.assignee .dot{background:var(--done)} .tl.owner .dot{background:var(--high)}
+.tl .body{flex:1}
+.tl .who{font-size:11px;color:var(--muted)}
+.add-progress-row{display:flex;gap:6px}
+.add-progress-row input{flex:1}.add-progress-row .pct{flex:0 0 56px}.add-progress-row select{flex:0 0 96px}
+.assign-row{display:flex;gap:6px;flex-wrap:wrap}.assign-row input{flex:1;min-width:160px}
+.td-foot{display:flex;gap:8px;margin-top:16px;border-top:1px solid var(--line);padding-top:12px}
+.td-foot button{padding:7px 12px;border-radius:8px;background:#f3f4f6;border:1px solid var(--line);color:#374151}
+.td-foot .done{background:#e7f6ec;border-color:#bfe6cc;color:#216e39}
+.td-foot .drop{background:#fdecec;border-color:#f4c8c8;color:#a11}
+@media(max-width:560px){ .col{flex-basis:80vw} }
+
+#app.wide{max-width:1180px}
