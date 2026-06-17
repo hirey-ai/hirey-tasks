@@ -17,7 +17,11 @@ const I18N = {
     'doc.title': 'Hirey Tasks — Inbox Zero / Kanban',
     'doc.desc': 'Auto-distill your Hi inbox (messages / meetings / matches) into tasks, and collaborate on a board: delegate to others, track progress live.',
     'brand.sub': 'Inbox · Kanban',
-    'view.mine': 'Mine', 'view.assigned': 'Assigned to me', 'view.all': 'All',
+    'view.mine': 'Mine', 'view.assigned': 'Assigned to me', 'view.all': 'All', 'view.requested': 'Requested',
+    'td.notifySource': "Send a receipt to the sender (they'll see status + your note)",
+    'role.requester': 'I requested', 'role.requesterFull': "I'm the requester",
+    'empty.requestedH': 'Nothing you sent is being tracked yet',
+    'empty.requestedP': 'Tasks others captured from your messages show up here with their live status + receipts.',
     'layout.board': 'Board', 'layout.list': 'List',
     'btn.rules': 'Rules', 'btn.settings': 'Settings', 'btn.new': '+ New', 'btn.signin': 'Sign in',
     'td.title': 'Task', 'td.progress': 'Progress / Activity',
@@ -72,7 +76,11 @@ const I18N = {
     'doc.title': 'Hirey Tasks — 收件箱归零 / 看板',
     'doc.desc': '把 Hi 收件箱里的消息/会议/匹配自动整理成任务，看板协作：派给别人、实时跟进度。',
     'brand.sub': '收件箱 · 看板',
-    'view.mine': '我的', 'view.assigned': '派给我的', 'view.all': '全部',
+    'view.mine': '我的', 'view.assigned': '派给我的', 'view.all': '全部', 'view.requested': '我请求的',
+    'td.notifySource': '给发件人回执（对方能看到状态 + 你的备注）',
+    'role.requester': '我请求的', 'role.requesterFull': '我是请求方',
+    'empty.requestedH': '还没有你发出的请求被跟踪',
+    'empty.requestedP': '别人从你发的消息里捕获成的任务会出现在这里，带他们的实时状态 + 回执。',
     'layout.board': '看板', 'layout.list': '列表',
     'btn.rules': '规则', 'btn.settings': '设置', 'btn.new': '+ 新建', 'btn.signin': '登录',
     'td.title': '任务', 'td.progress': '进展 / 活动流',
@@ -175,7 +183,7 @@ function metaChips(t_, into) {
   if (t_.assignee_kind === 'user' && t_.assignee_customer_id) {
     into.appendChild(el('span', 'chip assignee', t_.your_role === 'assignee' ? t('chip.assignedToMe') : t('chip.delegated')));
   }
-  if (VIEW !== 'mine' && t_.your_role) into.appendChild(el('span', 'chip reporter', t_.your_role === 'assignee' ? t('role.assignee') : t('role.reporter')));
+  if (VIEW !== 'mine' && t_.your_role) into.appendChild(el('span', 'chip reporter', t_.your_role === 'assignee' ? t('role.assignee') : (t_.your_role === 'requester' ? t('role.requester') : t('role.reporter'))));
 }
 
 // ----- board -----------------------------------------------------------------
@@ -246,7 +254,9 @@ async function load() {
       board.hidden = true; list.hidden = true; empty.hidden = false;
       empty.innerHTML = VIEW === 'assigned'
         ? `<h2>${t('empty.assignedH')}</h2><p class="muted">${t('empty.assignedP')}</p>`
-        : `<h2>${t('empty.zeroH')}</h2><p class="muted">${t('empty.zeroP')}</p>`;
+        : VIEW === 'requested'
+          ? `<h2>${t('empty.requestedH')}</h2><p class="muted">${t('empty.requestedP')}</p>`
+          : `<h2>${t('empty.zeroH')}</h2><p class="muted">${t('empty.zeroP')}</p>`;
       return;
     }
     empty.hidden = true;
@@ -271,7 +281,16 @@ function refreshDrawer(t_, progress) {
   m.appendChild(el('span', 'chip status', statusLabel(t_.status)));
   m.appendChild(el('span', 'chip type', t_.type || 'general'));
   m.appendChild(el('span', 'chip', t('meta.priority') + ' ' + (t_.priority || 'normal')));
-  if (t_.your_role) m.appendChild(el('span', 'chip ' + (t_.your_role === 'assignee' ? 'assignee' : 'reporter'), t_.your_role === 'assignee' ? t('role.assigneeFull') : (t_.your_role === 'owner' ? t('role.reporterFull') : t_.your_role)));
+  if (t_.your_role) m.appendChild(el('span', 'chip ' + (t_.your_role === 'assignee' ? 'assignee' : 'reporter'), t_.your_role === 'assignee' ? t('role.assigneeFull') : (t_.your_role === 'owner' ? t('role.reporterFull') : (t_.your_role === 'requester' ? t('role.requesterFull') : t_.your_role))));
+  // role-based affordances: requester(发件人) 只读观察；owner/assignee 在消息派生的 task 上可发回执。
+  const isRequester = t_.your_role === 'requester';
+  const canEdit = t_.your_role === 'owner' || t_.your_role === 'assignee';
+  const progRow = document.querySelector('#taskDrawer .add-progress-row');
+  const foot = document.querySelector('#taskDrawer .td-foot');
+  if (progRow) progRow.style.display = isRequester ? 'none' : '';
+  if (foot) foot.style.display = isRequester ? 'none' : '';
+  $('#tdAssignSection').hidden = isRequester;
+  $('#tdNotifyRow').hidden = !(canEdit && !!t_.source_agent_id);
   const pb = $('#tdProgressBar');
   if (t_.progress_pct != null) { pb.hidden = false; $('#tdBarFill').style.width = Math.max(0, Math.min(100, t_.progress_pct)) + '%'; $('#tdBarLabel').textContent = t_.progress_pct + '%'; } else pb.hidden = true;
   // 原始消息：标题是 LLM 蒸馏过的，这里展示对方实际发来的完整内容（body_markdown）。
@@ -305,7 +324,11 @@ function renderTimeline(items) {
   tl.scrollTop = tl.scrollHeight;
 }
 async function act(action, params, okKey) {
-  try { await call(action, { task_id: CURRENT, ...params }); if (okKey) toast(t(okKey)); await openTask(CURRENT); load(); }
+  const p = { ...params };
+  // 勾了「给发件人回执」且该控件可见 → 把这条动作标成显式回执(notify_source)。
+  const ns = $('#tdNotifySource');
+  if (ns && ns.checked && !$('#tdNotifyRow').hidden) p.notify_source = true;
+  try { await call(action, { task_id: CURRENT, ...p }); if (okKey) toast(t(okKey)); await openTask(CURRENT); load(); }
   catch (e) { if (e.message !== 'login_required') toast(t('toast.fail', { m: e.message })); }
 }
 

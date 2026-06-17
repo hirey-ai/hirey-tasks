@@ -20,6 +20,7 @@
       <button data-view="mine" data-i18n="view.mine">Mine</button>
       <button data-view="assigned" data-i18n="view.assigned">Assigned to me</button>
       <button data-view="all" class="active" data-i18n="view.all">All</button>
+      <button data-view="requested" data-i18n="view.requested">Requested</button>
     </div>
     <div class="seg" id="layoutSeg">
       <button data-layout="board" class="active" data-i18n="layout.board">Board</button>
@@ -80,6 +81,8 @@
         <button id="tdAssign" class="ghost small" data-i18n="td.assignBtn">Delegate</button>
       </div>
     </div>
+
+    <label class="row td-notify" id="tdNotifyRow" hidden><input type="checkbox" id="tdNotifySource" /> <span data-i18n="td.notifySource">Send a receipt to the sender (they'll see status + your note)</span></label>
 
     <div class="td-foot">
       <button id="tdComplete" class="done" data-i18n="td.complete">✓ Complete</button>
