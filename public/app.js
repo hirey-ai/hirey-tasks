@@ -24,6 +24,8 @@ const I18N = {
     'td.notePh': 'Write an update… (comment / progress note)',
     'td.status.none': 'No change', 'td.status.in_progress': 'In progress', 'td.status.waiting': 'Waiting', 'td.status.todo': 'To-do', 'td.status.done': 'Done',
     'td.update': 'Update',
+    'td.source': 'Original message',
+    'td.sourceAuto': 'Auto-captured from an inbound message — the title above is a distilled summary.',
     'td.delegate': 'Delegate',
     'td.delegateDesc': 'Hand this task to another user — enter their agent_id or owner public id. Requires a working relationship (same company or an existing pairing).',
     'td.assigneePh': 'their agent_id (ag_…) or owner public id', 'td.assignNotePh': 'note (optional)', 'td.assignBtn': 'Delegate',
@@ -77,6 +79,8 @@ const I18N = {
     'td.notePh': '写条进展…（评论 / 进度备注）',
     'td.status.none': '不改状态', 'td.status.in_progress': '进行中', 'td.status.waiting': '等待', 'td.status.todo': '待办', 'td.status.done': '完成',
     'td.update': '更新',
+    'td.source': '原始消息',
+    'td.sourceAuto': '由收到的消息自动生成——上面的标题是 LLM 蒸馏出的摘要。',
     'td.delegate': '派给别人',
     'td.delegateDesc': '把这个任务派给另一个用户 —— 填对方的 agent_id 或 owner public id。需与对方有协作关系（同公司或已有 pairing）。',
     'td.assigneePh': '对方 agent_id（ag_…）或 owner public id', 'td.assignNotePh': '派发说明（可选）', 'td.assignBtn': '派发',
@@ -270,6 +274,19 @@ function refreshDrawer(t_, progress) {
   if (t_.your_role) m.appendChild(el('span', 'chip ' + (t_.your_role === 'assignee' ? 'assignee' : 'reporter'), t_.your_role === 'assignee' ? t('role.assigneeFull') : (t_.your_role === 'owner' ? t('role.reporterFull') : t_.your_role)));
   const pb = $('#tdProgressBar');
   if (t_.progress_pct != null) { pb.hidden = false; $('#tdBarFill').style.width = Math.max(0, Math.min(100, t_.progress_pct)) + '%'; $('#tdBarLabel').textContent = t_.progress_pct + '%'; } else pb.hidden = true;
+  // 原始消息：标题是 LLM 蒸馏过的，这里展示对方实际发来的完整内容（body_markdown）。
+  const ss = $('#tdSourceSection');
+  const body = (t_.body_markdown || '').trim();
+  if (body) {
+    ss.hidden = false;
+    $('#tdSourceBody').textContent = body;
+    const meta = $('#tdSourceMeta');
+    meta.textContent = t_.auto_captured ? t('td.sourceAuto') : '';
+    meta.hidden = !t_.auto_captured;
+  } else {
+    ss.hidden = true;
+    $('#tdSourceBody').textContent = '';
+  }
   if (progress) renderTimeline(progress);
 }
 function renderTimeline(items) {
