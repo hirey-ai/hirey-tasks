@@ -207,7 +207,10 @@ function renderBoard(tasks) {
       const id = e.dataTransfer.getData('text/plain');
       const task = CACHE.find((x) => x.id === id);
       if (!task || task.status === s) return;
-      try { await call('add_progress', { task_id: id, status: s }); toast(t('toast.moved', { s: statusLabel(s) })); load(); }
+      // 默认回执：把别人请求的 task 拖到「进行中/等待/完成/丢弃」→ 默认给发件人推一条回执。
+      const params = { task_id: id, status: s };
+      if (task.source_agent_id && ['in_progress', 'waiting', 'done', 'dropped'].includes(s)) params.notify_source = true;
+      try { await call('add_progress', params); toast(t('toast.moved', { s: statusLabel(s) })); load(); }
       catch (err) { if (err.message !== 'login_required') toast(t('toast.fail', { m: err.message })); }
     });
     board.appendChild(col);
@@ -270,6 +273,7 @@ async function load() {
 async function openTask(id) {
   CURRENT = id;
   const drawer = $('#taskDrawer'); drawer.hidden = false;
+  $('#tdNotifySource').checked = true; // 回执默认勾选
   const t_ = CACHE.find((x) => x.id === id);
   if (t_) refreshDrawer(t_);
   try { const r = await call('get', { task_id: id, include_progress: true }); if (r.task) { CURRENT = id; refreshDrawer({ ...r.task, your_role: r.your_role }, r.progress || []); } }
