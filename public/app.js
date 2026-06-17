@@ -33,7 +33,7 @@ const I18N = {
     'new.title': 'New task', 'new.titlePh': 'Task title', 'new.type': 'Type', 'new.priority': 'Priority', 'new.create': 'Create',
     'set.title': 'Auto-capture & digest',
     'set.desc': 'When on, messages landing in your Hi inbox are auto-distilled into tasks (deduped, LLM-judged type / priority / title). A parallel overlay — it never affects message delivery.',
-    'set.enable': 'Enable auto-capture', 'set.channel': 'Digest channel',
+    'set.enable': 'Enable auto-capture', 'set.egress': 'Use AI for smarter titles (sends message text to the model)', 'set.channel': 'Digest channel',
     'set.ch.auto': 'Auto (SMS if phone, else email)', 'set.ch.sms': 'SMS', 'set.ch.email': 'Email', 'set.ch.none': 'Off',
     'set.save': 'Save',
     'rules.title': 'Auto-triage rules',
@@ -88,7 +88,7 @@ const I18N = {
     'new.title': '新建任务', 'new.titlePh': '任务标题', 'new.type': '类型', 'new.priority': '优先级', 'new.create': '创建',
     'set.title': '自动捕获与摘要',
     'set.desc': '开启后，落到你 Hi 收件箱的消息会被自动蒸馏成任务（去重、LLM 判类型/优先级/标题）。平行外挂——不影响消息投递。',
-    'set.enable': '开启自动捕获', 'set.channel': '摘要渠道',
+    'set.enable': '开启自动捕获', 'set.egress': '用 AI 生成更聪明的标题（会把消息正文发给模型）', 'set.channel': '摘要渠道',
     'set.ch.auto': '自动（有手机走短信，否则邮件）', 'set.ch.sms': '短信', 'set.ch.email': '邮件', 'set.ch.none': '不推送',
     'set.save': '保存',
     'rules.title': '自动分诊规则',
@@ -310,8 +310,8 @@ async function act(action, params, okKey) {
 }
 
 // ----- enroll / rules / login ------------------------------------------------
-async function openSettings() { $('#settingsDrawer').hidden = false; try { const r = await call('get_enrollment'); const e = r.enrollment; $('#enrollEnabled').checked = !!(e && e.enabled); $('#digestChannel').value = (e && e.digest_channel) || 'auto'; } catch {} }
-async function saveEnroll() { try { await call('enroll', { enabled: $('#enrollEnabled').checked, digest_channel: $('#digestChannel').value }); toast(t('toast.saved')); $('#settingsDrawer').hidden = true; load(); } catch (e) { toast(t('toast.fail', { m: e.message })); } }
+async function openSettings() { $('#settingsDrawer').hidden = false; try { const r = await call('get_enrollment'); const e = r.enrollment; $('#enrollEnabled').checked = !!(e && e.enabled); $('#egressConsent').checked = e ? e.llm_egress_consented !== false : true; $('#digestChannel').value = (e && e.digest_channel) || 'auto'; } catch {} }
+async function saveEnroll() { try { await call('enroll', { enabled: $('#enrollEnabled').checked, digest_channel: $('#digestChannel').value, llm_egress_consented: $('#egressConsent').checked }); toast(t('toast.saved')); $('#settingsDrawer').hidden = true; load(); } catch (e) { toast(t('toast.fail', { m: e.message })); } }
 async function openRules() {
   $('#rulesDrawer').hidden = false; const box = $('#rulesList'); box.innerHTML = `<p class="muted">${t('rules.loading')}</p>`;
   try {
