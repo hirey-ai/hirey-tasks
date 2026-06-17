@@ -176,6 +176,20 @@ const PRIO_ORDER = { urgent: 0, high: 1, normal: 2, low: 3 };
 function toast(m) { const tn = $('#toast'); tn.textContent = m; tn.hidden = false; clearTimeout(toast._t); toast._t = setTimeout(() => { tn.hidden = true; }, 2200); }
 function showBanner(m) { const b = $('#banner'); b.textContent = m; b.hidden = !m; }
 
+// 拖拽时近边缘自动滚动：HTML5 拖放默认不自动滚，导致够不到屏幕外的列 / 落点。
+// 鼠标靠近左右 → 横滚看板；靠近上下 → 纵滚页面。dragover 在拖拽中持续触发。
+function dragAutoScroll(e) {
+  const EDGE = 80, STEP = 24;
+  const board = document.getElementById('board');
+  const vw = window.innerWidth, vh = window.innerHeight;
+  if (board && board.scrollWidth > board.clientWidth + 4) {
+    if (e.clientX < EDGE) board.scrollLeft -= STEP;
+    else if (e.clientX > vw - EDGE) board.scrollLeft += STEP;
+  }
+  if (e.clientY < EDGE + 80) window.scrollBy(0, -STEP);        // +80 避开顶栏
+  else if (e.clientY > vh - EDGE) window.scrollBy(0, STEP);
+}
+
 // ----- card meta (shared by board + list) ------------------------------------
 function metaChips(t_, into) {
   into.appendChild(el('span', 'chip type', t_.type || 'general'));
@@ -372,6 +386,7 @@ function onLoggedIn() { LOGGED_IN = true; $('#loginModal').hidden = true; $('#au
 
 // ----- boot ------------------------------------------------------------------
 function wire() {
+  document.addEventListener('dragover', dragAutoScroll);   // 拖拽近边缘自动滚动
   $('#settingsBtn').onclick = openSettings; $('#rulesBtn').onclick = openRules;
   $('#saveEnroll').onclick = saveEnroll; $('#addRule').onclick = addRule;
   $('#authBtn').onclick = openLogin; $('#googleLogin').onclick = googleLogin; $('#otpStart').onclick = otpStart; $('#otpVerify').onclick = otpVerify;

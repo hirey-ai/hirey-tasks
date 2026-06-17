@@ -99,12 +99,13 @@ input,select{font:inherit;padding:8px 10px;border:1px solid var(--line);border-r
 .seg button.active{background:var(--brand);color:#fff}
 .top-actions{flex-wrap:wrap;gap:8px}
 
-.board{display:flex;gap:12px;overflow-x:auto;padding-bottom:8px;align-items:flex-start}
-.col{flex:0 0 250px;background:#eef1f5;border-radius:14px;padding:8px;min-height:120px}
+.board{display:flex;gap:12px;overflow-x:auto;padding-bottom:8px;align-items:stretch;min-height:72vh}
+/* 列等高、铺满宽屏：flex-grow 让列撑满可视宽度（不再两边留白），窄屏才横向滚动；整列高=大落点区 */
+.col{flex:1 1 240px;min-width:240px;background:#eef1f5;border-radius:14px;padding:8px;display:flex;flex-direction:column}
 .col.drag-over{outline:2px dashed var(--brand);outline-offset:-2px}
 .col-head{display:flex;align-items:center;justify-content:space-between;font-size:12px;font-weight:700;letter-spacing:.03em;color:var(--muted);text-transform:uppercase;padding:4px 6px 8px}
 .col-head .n{background:#fff;border-radius:999px;padding:1px 8px;color:#374151}
-.col-cards{display:flex;flex-direction:column;gap:8px;min-height:24px}
+.col-cards{display:flex;flex-direction:column;gap:8px;flex:1 1 auto;min-height:80px}
 .kcard{background:#fff;border:1px solid var(--line);border-radius:11px;box-shadow:var(--shadow);padding:10px;cursor:pointer;border-left:4px solid var(--normal)}
 .kcard.p-urgent{border-left-color:var(--urgent)} .kcard.p-high{border-left-color:var(--high)} .kcard.p-low{border-left-color:var(--low)}
 .kcard.dragging{opacity:.45}
@@ -141,4 +142,5 @@ input,select{font:inherit;padding:8px 10px;border:1px solid var(--line);border-r
 .td-foot .drop{background:#fdecec;border-color:#f4c8c8;color:#a11}
 @media(max-width:560px){ .col{flex-basis:80vw} }
 
-#app.wide{max-width:1180px}
+/* 看板视图铺满宽屏（不再卡 1180px、两边留白）；列表视图仍保留窄阅读宽度 */
+#app.wide{max-width:none;padding-left:24px;padding-right:24px}
