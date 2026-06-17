@@ -18,8 +18,8 @@ input,select{font:inherit;padding:8px 10px;border:1px solid var(--line);border-r
 
 .topbar{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-content:space-between;
   padding:12px 18px;background:rgba(255,255,255,.92);backdrop-filter:saturate(1.4) blur(8px);border-bottom:1px solid var(--line)}
-.brand{display:flex;align-items:center;gap:8px;font-weight:700;font-size:17px}
-.brand em{color:var(--muted);font-weight:500;font-style:normal;font-size:13px;margin-left:2px}
+.brand{display:flex;align-items:center;gap:8px;font-weight:700;font-size:17px;flex-shrink:0}
+.brand em{color:var(--muted);font-weight:500;font-style:normal;font-size:13px;margin-left:2px;white-space:nowrap}
 .top-actions{display:flex;align-items:center;gap:8px}
 .identity{font-size:13px;color:var(--muted);max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 

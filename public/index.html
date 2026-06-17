@@ -1,10 +1,10 @@
 <!doctype html>
-<html lang="zh">
+<html lang="en">
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Hirey Tasks — 收件箱归零 / 看板</title>
-<meta name="description" content="把 Hi 收件箱里的消息/会议/匹配自动整理成任务，看板协作：派给别人、实时跟进度。" />
+<title data-i18n="doc.title">Hirey Tasks — Inbox Zero / Kanban</title>
+<meta name="description" data-i18n-attr="content" data-i18n="doc.desc" content="Auto-distill your Hi inbox (messages / meetings / matches) into tasks, and collaborate on a board: delegate to others, track progress live." />
 <link rel="icon" href="icon.svg" type="image/svg+xml" />
 <link rel="stylesheet" href="styles.css" />
 </head>
@@ -13,23 +13,24 @@
   <div class="brand">
     <img src="icon.svg" alt="" width="26" height="26" />
     <span>Hirey&nbsp;Tasks</span>
-    <em>收件箱 · 看板</em>
+    <em data-i18n="brand.sub">Inbox · Kanban</em>
   </div>
   <div class="top-actions">
     <div class="seg" id="viewSeg">
-      <button data-view="mine" class="active">我的</button>
-      <button data-view="assigned">派给我的</button>
-      <button data-view="all">全部</button>
+      <button data-view="mine" data-i18n="view.mine">Mine</button>
+      <button data-view="assigned" data-i18n="view.assigned">Assigned to me</button>
+      <button data-view="all" class="active" data-i18n="view.all">All</button>
     </div>
     <div class="seg" id="layoutSeg">
-      <button data-layout="board" class="active">看板</button>
-      <button data-layout="list">列表</button>
+      <button data-layout="board" class="active" data-i18n="layout.board">Board</button>
+      <button data-layout="list" data-i18n="layout.list">List</button>
     </div>
-    <button id="rulesBtn" class="ghost" title="自动分诊规则">规则</button>
-    <button id="settingsBtn" class="ghost" title="自动捕获与摘要">设置</button>
-    <button id="newBtn" class="primary">+ 新建</button>
+    <button id="rulesBtn" class="ghost" data-i18n="btn.rules" title="Auto-triage rules">Rules</button>
+    <button id="settingsBtn" class="ghost" data-i18n="btn.settings" title="Auto-capture & digest">Settings</button>
+    <button id="newBtn" class="primary" data-i18n="btn.new">+ New</button>
+    <button id="langBtn" class="ghost" title="Language">中文</button>
     <span id="identity" class="identity" hidden></span>
-    <button id="authBtn" class="primary" hidden>登录</button>
+    <button id="authBtn" class="primary" hidden data-i18n="btn.signin">Sign in</button>
   </div>
 </header>
 
@@ -40,44 +41,44 @@
   <div id="empty" class="empty" hidden></div>
 </main>
 
-<!-- Task detail drawer: progress timeline + add progress + assign + triage -->
+<!-- Task detail drawer: progress timeline + add progress + delegate + triage -->
 <div id="taskDrawer" class="drawer" hidden>
   <div class="drawer-card wide">
-    <div class="drawer-head"><h3 id="tdTitle">任务</h3><button class="x" data-close>×</button></div>
+    <div class="drawer-head"><h3 id="tdTitle" data-i18n="td.title">Task</h3><button class="x" data-close>×</button></div>
     <div id="tdMeta" class="td-meta"></div>
     <div id="tdProgressBar" class="td-progress" hidden><div class="bar"><span id="tdBarFill"></span></div><small id="tdBarLabel"></small></div>
 
     <div class="td-section">
-      <h4>进展 / 活动流</h4>
+      <h4 data-i18n="td.progress">Progress / Activity</h4>
       <div id="tdTimeline" class="timeline"></div>
       <div class="add-progress-row">
-        <input id="tdNote" placeholder="写条进展…（评论 / 进度备注）" />
+        <input id="tdNote" data-i18n-attr="placeholder" data-i18n="td.notePh" placeholder="Write an update… (comment / progress note)" />
         <input id="tdPct" type="number" min="0" max="100" placeholder="%" class="pct" />
         <select id="tdStatus">
-          <option value="">不改状态</option>
-          <option value="in_progress">进行中</option>
-          <option value="waiting">等待</option>
-          <option value="todo">待办</option>
-          <option value="done">完成</option>
+          <option value="" data-i18n="td.status.none">No change</option>
+          <option value="in_progress" data-i18n="td.status.in_progress">In progress</option>
+          <option value="waiting" data-i18n="td.status.waiting">Waiting</option>
+          <option value="todo" data-i18n="td.status.todo">To-do</option>
+          <option value="done" data-i18n="td.status.done">Done</option>
         </select>
-        <button id="tdAddProgress" class="primary small">更新</button>
+        <button id="tdAddProgress" class="primary small" data-i18n="td.update">Update</button>
       </div>
     </div>
 
     <div class="td-section" id="tdAssignSection">
-      <h4>派给别人</h4>
-      <p class="muted">把这个任务派给另一个用户 —— 填对方的 agent_id 或 owner public_id。需与对方有协作关系（同公司或已有 pairing）。</p>
+      <h4 data-i18n="td.delegate">Delegate</h4>
+      <p class="muted" data-i18n="td.delegateDesc">Hand this task to another user — enter their agent_id or owner public id. Requires a working relationship (same company or an existing pairing).</p>
       <div class="assign-row">
-        <input id="tdAssignee" placeholder="对方 agent_id（ag_…）或 owner public_id" />
-        <input id="tdAssignNote" placeholder="派发说明（可选）" />
-        <button id="tdAssign" class="ghost small">派发</button>
+        <input id="tdAssignee" data-i18n-attr="placeholder" data-i18n="td.assigneePh" placeholder="their agent_id (ag_…) or owner public id" />
+        <input id="tdAssignNote" data-i18n-attr="placeholder" data-i18n="td.assignNotePh" placeholder="note (optional)" />
+        <button id="tdAssign" class="ghost small" data-i18n="td.assignBtn">Delegate</button>
       </div>
     </div>
 
     <div class="td-foot">
-      <button id="tdComplete" class="done">✓ 完成</button>
-      <button id="tdSnooze" class="">稍后一天</button>
-      <button id="tdDrop" class="drop">✕ 丢弃</button>
+      <button id="tdComplete" class="done" data-i18n="td.complete">✓ Complete</button>
+      <button id="tdSnooze" class="" data-i18n="td.snooze">Snooze 1 day</button>
+      <button id="tdDrop" class="drop" data-i18n="td.drop">✕ Drop</button>
     </div>
   </div>
 </div>
@@ -85,49 +86,49 @@
 <!-- New task modal -->
 <div id="newModal" class="modal" hidden>
   <div class="modal-card">
-    <div class="drawer-head"><h3>新建任务</h3><button class="x" data-close>×</button></div>
-    <input id="nTitle" placeholder="任务标题" />
+    <div class="drawer-head"><h3 data-i18n="new.title">New task</h3><button class="x" data-close>×</button></div>
+    <input id="nTitle" data-i18n-attr="placeholder" data-i18n="new.titlePh" placeholder="Task title" />
     <div class="rule-grid">
-      <label>类型 <select id="nType"><option value="general">general</option><option>request</option><option>question</option><option>decision</option><option>meeting</option><option>bug</option><option>lead</option><option>fyi</option></select></label>
-      <label>优先级 <select id="nPriority"><option value="normal">normal</option><option>urgent</option><option>high</option><option>low</option></select></label>
+      <label><span data-i18n="new.type">Type</span> <select id="nType"><option value="general">general</option><option>request</option><option>question</option><option>decision</option><option>meeting</option><option>bug</option><option>lead</option><option>fyi</option></select></label>
+      <label><span data-i18n="new.priority">Priority</span> <select id="nPriority"><option value="normal">normal</option><option>urgent</option><option>high</option><option>low</option></select></label>
     </div>
-    <button id="nCreate" class="primary block">创建</button>
+    <button id="nCreate" class="primary block" data-i18n="new.create">Create</button>
   </div>
 </div>
 
 <!-- Settings drawer: enroll + digest -->
 <div id="settingsDrawer" class="drawer" hidden>
   <div class="drawer-card">
-    <div class="drawer-head"><h3>自动捕获与摘要</h3><button class="x" data-close>×</button></div>
-    <p class="muted">开启后，落到你 Hi 收件箱的消息会被自动蒸馏成任务（去重、LLM 判类型/优先级/标题）。平行外挂——不影响消息投递。</p>
-    <label class="row"><input type="checkbox" id="enrollEnabled" /> <span>开启自动捕获</span></label>
-    <label class="row">摘要渠道
+    <div class="drawer-head"><h3 data-i18n="set.title">Auto-capture & digest</h3><button class="x" data-close>×</button></div>
+    <p class="muted" data-i18n="set.desc">When on, messages landing in your Hi inbox are auto-distilled into tasks (deduped, LLM-judged type / priority / title). A parallel overlay — it never affects message delivery.</p>
+    <label class="row"><input type="checkbox" id="enrollEnabled" /> <span data-i18n="set.enable">Enable auto-capture</span></label>
+    <label class="row"><span data-i18n="set.channel">Digest channel</span>
       <select id="digestChannel">
-        <option value="auto">自动（有手机走短信，否则邮件）</option>
-        <option value="sms">短信</option><option value="email">邮件</option><option value="none">不推送</option>
+        <option value="auto" data-i18n="set.ch.auto">Auto (SMS if phone, else email)</option>
+        <option value="sms" data-i18n="set.ch.sms">SMS</option><option value="email" data-i18n="set.ch.email">Email</option><option value="none" data-i18n="set.ch.none">Off</option>
       </select>
     </label>
-    <div class="drawer-foot"><button id="saveEnroll" class="primary">保存</button></div>
+    <div class="drawer-foot"><button id="saveEnroll" class="primary" data-i18n="set.save">Save</button></div>
   </div>
 </div>
 
 <!-- Rules drawer -->
 <div id="rulesDrawer" class="drawer" hidden>
   <div class="drawer-card">
-    <div class="drawer-head"><h3>自动分诊规则</h3><button class="x" data-close>×</button></div>
-    <p class="muted">命中条件（多项 AND）→ 自动打标 / 定优先级 / 自动丢弃 / 自动派发。捕获时按顺序应用。</p>
+    <div class="drawer-head"><h3 data-i18n="rules.title">Auto-triage rules</h3><button class="x" data-close>×</button></div>
+    <p class="muted" data-i18n="rules.desc">Match conditions (all AND) → auto-label / set priority / auto-drop / auto-delegate. Applied in order on capture.</p>
     <div id="rulesList" class="rules-list"></div>
-    <details class="add-rule"><summary>+ 新建规则</summary>
+    <details class="add-rule"><summary data-i18n="rules.new">+ New rule</summary>
       <div class="rule-form">
-        <input id="rName" placeholder="规则名（可选）" />
+        <input id="rName" data-i18n-attr="placeholder" data-i18n="rules.namePh" placeholder="Rule name (optional)" />
         <div class="rule-grid">
-          <label>来源含文本 <input id="rText" placeholder="如 报价单" /></label>
-          <label>类型= <select id="rType"><option value="">任意</option><option>question</option><option>request</option><option>decision</option><option>meeting</option><option>lead</option><option>bug</option><option>fyi</option><option>general</option></select></label>
-          <label>设优先级 <select id="rPriority"><option value="">不变</option><option>urgent</option><option>high</option><option>normal</option><option>low</option></select></label>
-          <label>加标签 <input id="rLabel" placeholder="如 billing" /></label>
-          <label class="ck"><input type="checkbox" id="rDrop" /> 自动丢弃</label>
+          <label><span data-i18n="rules.textLabel">Text contains</span> <input id="rText" data-i18n-attr="placeholder" data-i18n="rules.textPh" placeholder="e.g. invoice" /></label>
+          <label><span data-i18n="rules.typeLabel">Type =</span> <select id="rType"><option value="" data-i18n="rules.any">Any</option><option>question</option><option>request</option><option>decision</option><option>meeting</option><option>lead</option><option>bug</option><option>fyi</option><option>general</option></select></label>
+          <label><span data-i18n="rules.prioLabel">Set priority</span> <select id="rPriority"><option value="" data-i18n="rules.prioNone">No change</option><option>urgent</option><option>high</option><option>normal</option><option>low</option></select></label>
+          <label><span data-i18n="rules.labelLabel">Add label</span> <input id="rLabel" data-i18n-attr="placeholder" data-i18n="rules.labelPh" placeholder="e.g. billing" /></label>
+          <label class="ck"><input type="checkbox" id="rDrop" /> <span data-i18n="rules.drop">Auto-drop</span></label>
         </div>
-        <button id="addRule" class="primary small">添加规则</button>
+        <button id="addRule" class="primary small" data-i18n="rules.add">Add rule</button>
       </div>
     </details>
   </div>
@@ -136,15 +137,15 @@
 <!-- Login modal (hosted only) -->
 <div id="loginModal" class="modal" hidden>
   <div class="modal-card">
-    <div class="drawer-head"><h3>登录 Hirey</h3><button class="x" data-close>×</button></div>
-    <p class="muted">任务是你私有的，登录后才能查看与管理。Hi 在验证身份后才创建账号——没有匿名身份、不用粘贴 key。</p>
-    <button id="googleLogin" class="primary block">用 Google 登录</button>
-    <div class="sep">或</div>
+    <div class="drawer-head"><h3 data-i18n="login.title">Sign in to Hirey</h3><button class="x" data-close>×</button></div>
+    <p class="muted" data-i18n="login.desc">Tasks are private to you — sign in to view and manage them. Hi creates your account only after verifying identity: no anonymous identity, no key to paste.</p>
+    <button id="googleLogin" class="primary block" data-i18n="login.google">Sign in with Google</button>
+    <div class="sep" data-i18n="login.or">or</div>
     <div class="otp">
-      <div class="otp-tabs"><button class="tab active" data-otp="email">邮箱</button><button class="tab" data-otp="phone">手机</button></div>
+      <div class="otp-tabs"><button class="tab active" data-otp="email" data-i18n="login.email">Email</button><button class="tab" data-otp="phone" data-i18n="login.phone">Phone</button></div>
       <input id="otpId" placeholder="you@example.com" />
-      <button id="otpStart" class="ghost block">发送验证码</button>
-      <div id="otpStep2" hidden><input id="otpCode" placeholder="6 位验证码" inputmode="numeric" /><button id="otpVerify" class="primary block">验证并登录</button></div>
+      <button id="otpStart" class="ghost block" data-i18n="login.sendCode">Send code</button>
+      <div id="otpStep2" hidden><input id="otpCode" data-i18n-attr="placeholder" data-i18n="login.codePh" placeholder="6-digit code" inputmode="numeric" /><button id="otpVerify" class="primary block" data-i18n="login.verify">Verify & sign in</button></div>
     </div>
   </div>
 </div>
