@@ -103,6 +103,9 @@ input,select{font:inherit;padding:8px 10px;border:1px solid var(--line);border-r
 /* 列等高、铺满宽屏：flex-grow 让列撑满可视宽度（不再两边留白），窄屏才横向滚动；整列高=大落点区 */
 .col{flex:1 1 240px;min-width:240px;background:#eef1f5;border-radius:14px;padding:8px;display:flex;flex-direction:column}
 .col.drag-over{outline:2px dashed var(--brand);outline-offset:-2px}
+/* Rejected / 拒绝做：muted red lane so it reads as a terminal "won't do" column */
+.col[data-status="rejected"]{background:#fbecec}
+.col[data-status="rejected"] .col-head{color:#a11}
 .col-head{display:flex;align-items:center;justify-content:space-between;font-size:12px;font-weight:700;letter-spacing:.03em;color:var(--muted);text-transform:uppercase;padding:4px 6px 8px}
 .col-head .n{background:#fff;border-radius:999px;padding:1px 8px;color:#374151}
 .col-cards{display:flex;flex-direction:column;gap:8px;flex:1 1 auto;min-height:80px}

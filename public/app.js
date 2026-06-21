@@ -26,7 +26,7 @@ const I18N = {
     'btn.rules': 'Rules', 'btn.settings': 'Settings', 'btn.new': '+ New', 'btn.signin': 'Sign in',
     'td.title': 'Task', 'td.progress': 'Progress / Activity',
     'td.notePh': 'Write an update… (comment / progress note)',
-    'td.status.none': 'No change', 'td.status.in_progress': 'In progress', 'td.status.waiting': 'Waiting', 'td.status.todo': 'To-do', 'td.status.done': 'Done',
+    'td.status.none': 'No change', 'td.status.in_progress': 'In progress', 'td.status.waiting': 'Waiting', 'td.status.todo': 'To-do', 'td.status.done': 'Done', 'td.status.rejected': 'Rejected',
     'td.update': 'Update',
     'td.source': 'Original message',
     'td.sourceAuto': 'Auto-captured from an inbound message — the title above is a distilled summary.',
@@ -53,7 +53,8 @@ const I18N = {
     'login.google': 'Sign in with Google', 'login.or': 'or',
     'login.email': 'Email', 'login.phone': 'Phone',
     'login.sendCode': 'Send code', 'login.codePh': '6-digit code', 'login.verify': 'Verify & sign in',
-    'status.inbox': 'Inbox', 'status.todo': 'To-do', 'status.in_progress': 'In progress', 'status.waiting': 'Waiting', 'status.delegated': 'Delegated', 'status.done': 'Done', 'status.dropped': 'Dropped',
+    'status.inbox': 'Inbox', 'status.todo': 'To-do', 'status.in_progress': 'In progress', 'status.waiting': 'Waiting', 'status.delegated': 'Delegated', 'status.done': 'Done', 'status.dropped': 'Dropped', 'status.rejected': 'Rejected',
+    'reject.prompt': 'Why are you rejecting this? The sender will see your reason.',
     'chip.assignedToMe': 'Assigned to me', 'chip.delegated': 'Delegated out',
     'role.assignee': 'I’m assignee', 'role.reporter': 'I’m reporter',
     'role.assigneeFull': 'I’m the assignee', 'role.reporterFull': 'I’m the reporter',
@@ -64,7 +65,7 @@ const I18N = {
     'empty.zeroH': 'Inbox zero 🎉', 'empty.zeroP': 'No tasks. Create one, or turn on auto-capture to pull inbox messages in.',
     'empty.signinH': 'Sign in to see your tasks', 'empty.signinP': 'Tasks are private to you. Sign in with Google / email / phone.',
     'toast.moved': 'Moved to “{s}”', 'toast.fail': 'Failed: {m}', 'toast.created': 'Created', 'toast.updated': 'Updated', 'toast.delegated': 'Delegated', 'toast.completed': 'Completed', 'toast.dropped': 'Dropped', 'toast.snoozed': 'Snoozed', 'toast.saved': 'Saved',
-    'toast.needTitle': 'Enter a title', 'toast.needContent': 'Write something or pick a status', 'toast.needAssignee': 'Enter their agent_id or owner public id', 'toast.codeSent': 'Code sent', 'toast.ruleAdded': 'Rule added', 'toast.ruleNeed': 'Add at least one condition and one action',
+    'toast.needTitle': 'Enter a title', 'toast.needContent': 'Write something or pick a status', 'toast.needAssignee': 'Enter their agent_id or owner public id', 'toast.needReason': 'A reason is required to reject', 'toast.codeSent': 'Code sent', 'toast.ruleAdded': 'Rule added', 'toast.ruleNeed': 'Add at least one condition and one action',
     'toast.readFail': 'Read failed: {m}', 'toast.loadFail': 'Load failed: {m}', 'toast.sendFail': 'Send failed: {e}', 'toast.verifyFail': 'Verification failed: {e}', 'toast.startFail': 'Could not start',
     'identity.signedIn': 'Signed in',
     'rules.loading': 'Loading…', 'rules.none': 'No rules yet.', 'rules.del': 'Delete',
@@ -85,7 +86,7 @@ const I18N = {
     'btn.rules': '规则', 'btn.settings': '设置', 'btn.new': '+ 新建', 'btn.signin': '登录',
     'td.title': '任务', 'td.progress': '进展 / 活动流',
     'td.notePh': '写条进展…（评论 / 进度备注）',
-    'td.status.none': '不改状态', 'td.status.in_progress': '进行中', 'td.status.waiting': '等待', 'td.status.todo': '待办', 'td.status.done': '完成',
+    'td.status.none': '不改状态', 'td.status.in_progress': '进行中', 'td.status.waiting': '等待', 'td.status.todo': '待办', 'td.status.done': '完成', 'td.status.rejected': '拒绝做',
     'td.update': '更新',
     'td.source': '原始消息',
     'td.sourceAuto': '由收到的消息自动生成——上面的标题是 LLM 蒸馏出的摘要。',
@@ -112,7 +113,8 @@ const I18N = {
     'login.google': '用 Google 登录', 'login.or': '或',
     'login.email': '邮箱', 'login.phone': '手机',
     'login.sendCode': '发送验证码', 'login.codePh': '6 位验证码', 'login.verify': '验证并登录',
-    'status.inbox': '新进', 'status.todo': '待办', 'status.in_progress': '进行中', 'status.waiting': '等待', 'status.delegated': '已委托', 'status.done': '已完成', 'status.dropped': '已丢弃',
+    'status.inbox': '新进', 'status.todo': '待办', 'status.in_progress': '进行中', 'status.waiting': '等待', 'status.delegated': '已委托', 'status.done': '已完成', 'status.dropped': '已丢弃', 'status.rejected': '拒绝做',
+    'reject.prompt': '为什么拒绝这条？发起人会看到你的理由。',
     'chip.assignedToMe': '派给我', 'chip.delegated': '已派出',
     'role.assignee': '我受理', 'role.reporter': '我发起',
     'role.assigneeFull': '我是受理人', 'role.reporterFull': '我是报告人',
@@ -123,7 +125,7 @@ const I18N = {
     'empty.zeroH': '收件箱归零 🎉', 'empty.zeroP': '没有任务。新建一个，或开启自动捕获让收件箱消息自动进来。',
     'empty.signinH': '登录查看你的任务', 'empty.signinP': '任务是你私有的。用 Google / 邮箱 / 手机登录即可。',
     'toast.moved': '已移动到「{s}」', 'toast.fail': '失败：{m}', 'toast.created': '已创建', 'toast.updated': '已更新', 'toast.delegated': '已派发', 'toast.completed': '已完成', 'toast.dropped': '已丢弃', 'toast.snoozed': '已推迟', 'toast.saved': '已保存',
-    'toast.needTitle': '填个标题', 'toast.needContent': '写点内容或选个状态', 'toast.needAssignee': '填对方 agent_id 或 owner public id', 'toast.codeSent': '验证码已发送', 'toast.ruleAdded': '规则已添加', 'toast.ruleNeed': '至少填一个条件和一个动作',
+    'toast.needTitle': '填个标题', 'toast.needContent': '写点内容或选个状态', 'toast.needAssignee': '填对方 agent_id 或 owner public id', 'toast.needReason': '拒绝必须填写理由', 'toast.codeSent': '验证码已发送', 'toast.ruleAdded': '规则已添加', 'toast.ruleNeed': '至少填一个条件和一个动作',
     'toast.readFail': '读取失败：{m}', 'toast.loadFail': '加载失败：{m}', 'toast.sendFail': '发送失败：{e}', 'toast.verifyFail': '验证失败：{e}', 'toast.startFail': '启动失败',
     'identity.signedIn': '已登录',
     'rules.loading': '加载中…', 'rules.none': '还没有规则。', 'rules.del': '删除',
@@ -171,7 +173,7 @@ async function call(action, params = {}) {
 const $ = (s) => document.querySelector(s);
 const el = (tag, c, txt) => { const e = document.createElement(tag); if (c) e.className = c; if (txt != null) e.textContent = txt; return e; };
 const statusLabel = (s) => t('status.' + s) || s;
-const BOARD_COLS = ['inbox', 'todo', 'in_progress', 'waiting', 'delegated', 'done'];
+const BOARD_COLS = ['inbox', 'todo', 'in_progress', 'waiting', 'delegated', 'done', 'rejected'];
 const PRIO_ORDER = { urgent: 0, high: 1, normal: 2, low: 3 };
 function toast(m) { const tn = $('#toast'); tn.textContent = m; tn.hidden = false; clearTimeout(toast._t); toast._t = setTimeout(() => { tn.hidden = true; }, 2200); }
 function showBanner(m) { const b = $('#banner'); b.textContent = m; b.hidden = !m; }
@@ -221,9 +223,17 @@ function renderBoard(tasks) {
       const id = e.dataTransfer.getData('text/plain');
       const task = CACHE.find((x) => x.id === id);
       if (!task || task.status === s) return;
-      // 默认回执：把别人请求的 task 拖到「进行中/等待/完成/丢弃」→ 默认给发件人推一条回执。
+      // 默认回执：把别人请求的 task 拖到「进行中/等待/完成/丢弃/拒绝」→ 默认给发件人推一条回执。
       const params = { task_id: id, status: s };
-      if (task.source_agent_id && ['in_progress', 'waiting', 'done', 'dropped'].includes(s)) params.notify_source = true;
+      // 拒绝做：必须填一条非空理由 → 作为 note 随回执发给发起人（source_agent_id）。
+      if (s === 'rejected') {
+        const reason = (window.prompt(t('reject.prompt')) || '').trim();
+        if (!reason) { toast(t('toast.needReason')); return; }
+        params.note = reason;
+        if (task.source_agent_id) params.notify_source = true;
+      } else if (task.source_agent_id && ['in_progress', 'waiting', 'done', 'dropped'].includes(s)) {
+        params.notify_source = true;
+      }
       try { await call('add_progress', params); toast(t('toast.moved', { s: statusLabel(s) })); load(); }
       catch (err) { if (err.message !== 'login_required') toast(t('toast.fail', { m: err.message })); }
     });
@@ -397,7 +407,7 @@ function wire() {
   document.querySelectorAll('#viewSeg button').forEach((b) => b.onclick = () => { VIEW = b.dataset.view; document.querySelectorAll('#viewSeg button').forEach((x) => x.classList.toggle('active', x === b)); load(); });
   document.querySelectorAll('#layoutSeg button').forEach((b) => b.onclick = () => { LAYOUT = b.dataset.layout; document.querySelectorAll('#layoutSeg button').forEach((x) => x.classList.toggle('active', x === b)); load(); });
   // task drawer actions
-  $('#tdAddProgress').onclick = () => { const note = $('#tdNote').value.trim(); const pctRaw = $('#tdPct').value.trim(); const status = $('#tdStatus').value; const params = {}; if (note) params.note = note; if (pctRaw !== '') params.progress_pct = Number(pctRaw); if (status) params.status = status; if (!params.note && params.progress_pct == null && !params.status) return toast(t('toast.needContent')); act('add_progress', params, 'toast.updated').then(() => { $('#tdNote').value = ''; $('#tdPct').value = ''; $('#tdStatus').value = ''; }); };
+  $('#tdAddProgress').onclick = () => { const note = $('#tdNote').value.trim(); const pctRaw = $('#tdPct').value.trim(); const status = $('#tdStatus').value; const params = {}; if (note) params.note = note; if (pctRaw !== '') params.progress_pct = Number(pctRaw); if (status) params.status = status; if (!params.note && params.progress_pct == null && !params.status) return toast(t('toast.needContent')); if (status === 'rejected' && !note) return toast(t('toast.needReason')); act('add_progress', params, 'toast.updated').then(() => { $('#tdNote').value = ''; $('#tdPct').value = ''; $('#tdStatus').value = ''; }); };
   $('#tdAssign').onclick = () => { const v = $('#tdAssignee').value.trim(); if (!v) return toast(t('toast.needAssignee')); const params = /^ag_/.test(v) ? { assignee_agent_id: v } : { assignee_owner_public_id: v }; const note = $('#tdAssignNote').value.trim(); if (note) params.note = note; act('assign', params, 'toast.delegated').then(() => { $('#tdAssignee').value = ''; $('#tdAssignNote').value = ''; }); };
   $('#tdComplete').onclick = () => act('complete', {}, 'toast.completed');
   $('#tdDrop').onclick = () => act('drop', {}, 'toast.dropped');
